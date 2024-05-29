@@ -1,13 +1,12 @@
+import SignUp from "@components/molecules/signup";
 import React from "react";
-import Home from "@components/templates/Home/index";
 
 const index = () => {
   return (
     <div>
-      <Home />
+      <SignUp />
     </div>
   );
 };
-index;
 
 export default index;

@@ -3,9 +3,9 @@ import Navbar from "../Navbar";
 
 const AppShell = ({ children }) => {
   return (
-    <div className="max-w-7xl mx-auto">
+    <div>
       <Navbar />
-      <div>{children}</div>
+      <div className="pt-16">{children}</div>
     </div>
   );
 };
