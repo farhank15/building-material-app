@@ -1,7 +1,9 @@
-# React + Vite
+**React + Vite Project**
 
-**Install Node_module : **/br 
-$ npm i
+Installation
+First, install the necessary node modules:
+$ npm install
 
-**RUN :**
+Running the Development Server
+To start the development server, run:
 $ npm run dev
