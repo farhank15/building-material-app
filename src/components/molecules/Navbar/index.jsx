@@ -1,73 +1,96 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { FaBars } from "react-icons/fa";
+import { FiMenu, FiX } from "react-icons/fi";
 
 const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setIsOpen(!isOpen);
   };
 
   return (
-    <div className="navbar font-poppins bg-base-100">
-      <div className="flex-1">
-        <Link to="/" className="font-extrabold cursor-pointer text-4xl">
-          RML
-        </Link>
-      </div>
-      <div className="flex-none gap-2">
-        <div className="form-control">
-          <input
-            type="text"
-            placeholder="Search"
-            className="input input-bordered w-24 md:w-auto"
-          />
-        </div>
-        <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle"
-            onClick={toggleMenu}
-          >
-            <FaBars className="w-6 h-6" />
+    <nav className="bg-white font-poppins  shadow-lg fixed top-0 w-full z-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex-shrink-0 flex items-center">
+            <h1 className="text-4xl font-bold">RML</h1>
           </div>
-          {menuOpen && (
-            <ul
-              tabIndex={0}
-              className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
-            >
-              <li>
-                <Link to="/" onClick={() => setMenuOpen(false)}>
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/katalog" onClick={() => setMenuOpen(false)}>
-                  Katalog
-                </Link>
-              </li>
-              <li>
-                <Link to="/wilayah" onClick={() => setMenuOpen(false)}>
-                  Wilayah
-                </Link>
-              </li>
-              <li>
-                <Link to="/bantuan" onClick={() => setMenuOpen(false)}>
-                  Bantuan
-                </Link>
-              </li>
-              <li>
-                <Link to="/kalkulasi" onClick={() => setMenuOpen(false)}>
-                  Kalkulasi
-                </Link>
-              </li>
-            </ul>
-          )}
+          <div className="hidden md:flex md:items-center md:space-x-8 md:ml-10">
+            <a href="#" className="btn btn-ghost btn-sm rounded-btn">
+              Home
+            </a>
+            <a href="#" className="btn btn-ghost btn-sm rounded-btn">
+              Katalog
+            </a>
+            <a href="#" className="btn btn-ghost btn-sm rounded-btn">
+              Wilayah
+            </a>
+            <a href="#" className="btn btn-ghost btn-sm rounded-btn">
+              Bantuan
+            </a>
+            <a href="#" className="btn btn-ghost btn-sm rounded-btn">
+              Kalkulasi
+            </a>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="hidden md:block">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="input input-bordered input-sm"
+              />
+            </div>
+            <button className="hidden md:block btn btn-primary btn-sm">
+              Sign In
+            </button>
+            <button className="hidden md:block btn btn-secondary btn-sm">
+              Sign Up
+            </button>
+            <div className="md:hidden flex items-center">
+              <button onClick={toggleMenu}>
+                {isOpen ? (
+                  <FiX className="text-2xl" />
+                ) : (
+                  <FiMenu className="text-2xl" />
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+      {isOpen && (
+        <div className="md:hidden">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <a href="#" className="block btn btn-ghost btn-sm rounded-btn">
+              Home
+            </a>
+            <a href="#" className="block btn btn-ghost btn-sm rounded-btn">
+              Katalog
+            </a>
+            <a href="#" className="block btn btn-ghost btn-sm rounded-btn">
+              Wilayah
+            </a>
+            <a href="#" className="block btn btn-ghost btn-sm rounded-btn">
+              Bantuan
+            </a>
+            <a href="#" className="block btn btn-ghost btn-sm rounded-btn">
+              Kalkulasi
+            </a>
+            <div className="mt-3 px-2 space-y-1">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="input input-bordered input-sm w-full"
+              />
+              <button className="btn btn-primary btn-sm w-full">Sign In</button>
+              <button className="btn btn-secondary btn-sm w-full">
+                Sign Up
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </nav>
   );
 };
 
