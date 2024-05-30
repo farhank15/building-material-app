@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
+import Autentikasi from "@components/atoms/Autentikasi";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -85,20 +86,7 @@ const Navbar = () => {
                 className="input input-bordered input-sm"
               />
             </div>
-            <NavLink
-              to="/signin"
-              className="hidden pt-2 btn btn-primary btn-sm md:block"
-              onClick={closeMenu}
-            >
-              Sign In
-            </NavLink>
-            <NavLink
-              to="/signup"
-              className="hidden pt-2 md:block btn btn-secondary btn-sm"
-              onClick={closeMenu}
-            >
-              Sign Up
-            </NavLink>
+            <Autentikasi className="hidden md:block" closeMenu={closeMenu} />
             <div className="flex items-center md:hidden">
               <button onClick={toggleMenu}>
                 {isOpen ? (
@@ -169,48 +157,14 @@ const Navbar = () => {
             >
               Kalkulasi
             </NavLink>
-            <NavLink
-              to="/flooring-estimate"
-              className={({ isActive }) =>
-                isActive
-                  ? "block px-3 py-2 rounded-md text-base font-medium bg-blue-500 text-white"
-                  : "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200"
-              }
-              onClick={closeMenu}
-            >
-              Estimasi Lantai
-            </NavLink>
-            <NavLink
-              to="/paint-estimate"
-              className={({ isActive }) =>
-                isActive
-                  ? "block px-3 py-2 rounded-md text-base font-medium bg-blue-500 text-white"
-                  : "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200"
-              }
-              onClick={closeMenu}
-            >
-              Estimasi Cat
-            </NavLink>
+
             <div className="px-2 mt-3 space-y-1">
               <input
                 type="text"
                 placeholder="Search..."
                 className="w-full input input-bordered input-sm"
               />
-              <NavLink
-                to="/signin"
-                className="w-full btn btn-primary btn-sm"
-                onClick={closeMenu}
-              >
-                Sign In
-              </NavLink>
-              <NavLink
-                to="/signup"
-                className="w-full btn btn-secondary btn-sm"
-                onClick={closeMenu}
-              >
-                Sign Up
-              </NavLink>
+              <Autentikasi closeMenu={closeMenu} />
             </div>
           </div>
         </div>

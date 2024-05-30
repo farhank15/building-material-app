@@ -1,16 +1,16 @@
-import React from "react";
 import BgHero from "@assets/images/Hero.webp";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
     <div
-      className="hero min-h-screen"
+      className="min-h-screen hero"
       style={{ backgroundImage: `url(${BgHero})` }}
     >
       <div className="hero-overlay bg-opacity-65"></div>
-      <div className="hero-content text-center text-neutral-content">
+      <div className="text-center hero-content text-neutral-content">
         <div className="max-w-lg md:max-w-2xl lg:max-w-4xl">
-          <h1 className="mb-5 text-5xl md:text-5xl lg:text-7xl font-bold">
+          <h1 className="mb-5 text-5xl font-bold md:text-5xl lg:text-7xl">
             Welcome to BuildPro
           </h1>
           <p className="mb-5 text-sm md:text-base lg:text-lg">
@@ -18,9 +18,12 @@ const Hero = () => {
             flooring and paint estimates to comprehensive project budgeting, we
             make your construction projects seamless and efficient.
           </p>
-          <button className="btn btn-primary text-sm md:text-base lg:text-lg">
+          <Link
+            to="/kalkulasi"
+            className="text-sm btn btn-primary md:text-base lg:text-lg"
+          >
             Start Your Project
-          </button>
+          </Link>
         </div>
       </div>
     </div>

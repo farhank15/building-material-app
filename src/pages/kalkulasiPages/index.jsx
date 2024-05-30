@@ -1,7 +1,12 @@
 import React from "react";
+import Estimate from "@components/templates/Estimate";
 
 const index = () => {
-  return <div>kalkulasi</div>;
+  return (
+    <div>
+      <Estimate />
+    </div>
+  );
 };
 
 export default index;

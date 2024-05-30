@@ -12,7 +12,6 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/:id" element={<Home />} />
       <Route path="/katalog" element={<Katalog />} />
       <Route path="/wilayah" element={<Wilayah />} />
       <Route path="/bantuan" element={<Bantuan />} />
