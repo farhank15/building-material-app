@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 import Autentikasi from "@components/atoms/Autentikasi";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -12,6 +15,25 @@ const Navbar = () => {
 
   const closeMenu = () => {
     setIsOpen(false);
+  };
+
+  const handleKalkulasiClick = (e) => {
+    const username = Cookies.get("username");
+    if (!username) {
+      e.preventDefault();
+      Swal.fire({
+        icon: "info",
+        title: "Login Diperlukan",
+        text: "Silakan login terlebih dahulu untuk mengakses halaman Kalkulasi.",
+        confirmButtonText: "OK",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/signin");
+        }
+      });
+    } else {
+      closeMenu();
+    }
   };
 
   return (
@@ -73,7 +95,7 @@ const Navbar = () => {
                   ? "btn btn-ghost btn-sm rounded-btn bg-blue-500 text-white font-bold"
                   : "btn btn-ghost btn-sm rounded-btn"
               }
-              onClick={closeMenu}
+              onClick={handleKalkulasiClick}
             >
               Kalkulasi
             </NavLink>
@@ -153,7 +175,7 @@ const Navbar = () => {
                   ? "block px-3 py-2 rounded-md text-base font-medium bg-blue-500 text-white"
                   : "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200"
               }
-              onClick={closeMenu}
+              onClick={handleKalkulasiClick}
             >
               Kalkulasi
             </NavLink>

@@ -1,48 +1,91 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import Bg from "@assets/images/Login-signin.webp";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const usernameCookie = Cookies.get("username");
+    if (usernameCookie) {
+      navigate("/"); // Redirect to home page if already logged in
+    }
+  }, [navigate]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   const handleSignIn = async () => {
+    if (!username || !password) {
+      Swal.fire({
+        icon: "error",
+        title: "Login Gagal",
+        text: "Username dan password harus diisi.",
+      });
+      return;
+    }
+
     try {
-      const response = await axios.get(
-        `http://localhost:3001/users?username=${username}&password=${password}`
-      );
-      if (response.data.length > 0) {
-        // User found
-        const user = response.data[0];
-        Cookies.set("username", user.username, { expires: 7 }); // Set a cookie
-        Swal.fire({
-          icon: "success",
-          title: "Login Successful",
-          text: "You have been successfully logged in!",
-        });
-      } else {
-        // User not found or incorrect password
+      const response = await axios.get(`http://localhost:3001/users`);
+      const user = response.data.find((user) => user.username === username);
+
+      if (!user) {
         Swal.fire({
           icon: "error",
-          title: "Login Failed",
-          text: "Incorrect username or password.",
+          title: "Login Gagal",
+          text: "Username tidak ditemukan.",
         });
+        return;
       }
+
+      if (user.password !== password) {
+        Swal.fire({
+          icon: "error",
+          title: "Login Gagal",
+          text: "Password salah.",
+        });
+        return;
+      }
+
+      // User found and password correct
+      const cookieOptions = rememberMe
+        ? { expires: 7 } // Persistent for 7 days
+        : {}; // Session cookie
+      Cookies.set("username", user.username, cookieOptions); // Set a cookie
+      Swal.fire({
+        icon: "success",
+        title: "Login Berhasil",
+        text: "Anda berhasil masuk!",
+      }).then(() => {
+        navigate("/"); // Redirect to home page
+        window.location.reload(); // Refresh the page
+      });
     } catch (error) {
       Swal.fire({
         icon: "error",
-        title: "Login Failed",
-        text: "An error occurred during login. Please try again.",
+        title: "Login Gagal",
+        text: "Terjadi kesalahan saat login. Silakan coba lagi.",
       });
     }
+  };
+
+  const handleForgotPassword = () => {
+    Swal.fire({
+      icon: "info",
+      title: "Lupa Password?",
+      html: 'Silakan hubungi admin untuk mereset password Anda. <br><br> <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-800">Klik di sini untuk menghubungi via WhatsApp</a>',
+      confirmButtonText: "OK",
+    });
   };
 
   return (
@@ -88,7 +131,7 @@ const LoginForm = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
               <div
-                className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                className="absolute inset-y-0 right-0 flex items-center pr-3 mb-2 cursor-pointer"
                 onClick={togglePasswordVisibility}
               >
                 {showPassword ? <FiEyeOff /> : <FiEye />}
@@ -101,17 +144,20 @@ const LoginForm = () => {
                 className="mr-2 leading-tight"
                 type="checkbox"
                 id="rememberMe"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
               />
               <label className="text-sm text-gray-700" htmlFor="rememberMe">
-                Remember me
+                Ingat saya
               </label>
             </div>
-            <a
+            <button
+              type="button"
               className="inline-block text-sm font-bold text-blue-500 align-baseline hover:text-blue-800"
-              href="#"
+              onClick={handleForgotPassword}
             >
-              Forgot Password?
-            </a>
+              Lupa Password?
+            </button>
           </div>
           <div className="mt-6">
             <button
@@ -124,10 +170,10 @@ const LoginForm = () => {
           </div>
           <div className="mt-4 text-center">
             <p className="text-gray-600">
-              Don't have an account?{" "}
-              <a className="text-blue-500 hover:text-blue-800" href="#">
-                Register
-              </a>
+              Belum punya akun?{" "}
+              <Link className="text-blue-500 hover:text-blue-800" to="/signup">
+                Daftar
+              </Link>
             </p>
           </div>
         </form>

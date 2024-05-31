@@ -17,6 +17,42 @@
       "phone": "12213456757",
       "password": "123456789",
       "confirmPassword": "123456789"
+    },
+    {
+      "id": "b5b6",
+      "username": "daqenasede1",
+      "name": "ww",
+      "email": "acipapahan@gmail.com",
+      "phone": "12213456757",
+      "password": "11111111",
+      "confirmPassword": "11111111"
+    },
+    {
+      "id": "a5f0",
+      "username": "daqenasede11",
+      "name": "ww",
+      "email": "faizahsalsabilaam@gmail.com",
+      "phone": "12213456757",
+      "password": "111111111",
+      "confirmPassword": "111111111"
+    },
+    {
+      "id": "5ec7",
+      "username": "daqenasede12",
+      "name": "ww",
+      "email": "daqenasede12@gakiy.com",
+      "phone": "12213456757",
+      "password": "11111111",
+      "confirmPassword": "11111111"
+    },
+    {
+      "id": "7067",
+      "username": "huda123",
+      "name": "choirul huda",
+      "email": "huda@gmail.com",
+      "phone": "12213456757",
+      "password": "12345678",
+      "confirmPassword": "12345678"
     }
   ]
 }

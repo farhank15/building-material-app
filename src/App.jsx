@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "@pages/homePages";
 import Katalog from "@pages/katalogPages";
 import Wilayah from "@pages/wilayahPages";
@@ -7,8 +7,27 @@ import Bantuan from "@pages/bantuanPages";
 import Kalkulasi from "@pages/kalkulasiPages";
 import SignIn from "@pages/signinPages";
 import Signup from "@pages/signupPages";
+import LoadingScreen from "@components/atoms/LoadingScreen";
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleRouteChange = async () => {
+      setIsLoading(true);
+      // Simulate a network request or any loading logic
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      setIsLoading(false);
+    };
+
+    handleRouteChange();
+  }, [location]);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />

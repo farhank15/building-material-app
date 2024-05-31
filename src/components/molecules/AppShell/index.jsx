@@ -8,7 +8,7 @@ const AppShell = ({ children }) => {
     <div>
       <Navbar />
       <BudgetProvider>
-        <div className="pt-16">{children}</div>
+        <div className="mt-14">{children}</div>
       </BudgetProvider>
       <Footer />
     </div>
