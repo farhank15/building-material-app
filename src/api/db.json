@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "id": "613d",
+      "username": "daqenasede",
+      "name": "ww",
+      "email": "daqenasede@gakiy.com",
+      "phone": "12213456757",
+      "password": "123456789",
+      "confirmPassword": "123456789"
+    },
+    {
+      "id": "4a30",
+      "username": "aku",
+      "name": "farhan",
+      "email": "han@gakiy.com",
+      "phone": "12213456757",
+      "password": "123456789",
+      "confirmPassword": "123456789"
+    }
+  ]
+}
