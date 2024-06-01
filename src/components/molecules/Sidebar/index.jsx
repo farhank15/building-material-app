@@ -8,7 +8,7 @@ import Total from "@assets/icons/total.svg";
 
 const Sidebar = ({ onSectionChange }) => {
   return (
-    <div className="w-full p-4 mt-4 mb-2 overflow-y-auto lg:w-1/5 lg:h-screen">
+    <div className="w-full p-4 mt-4 mb-2 overflow-y-auto lg:h-auto lg:w-1/5">
       <nav className="grid grid-cols-2 gap-2 lg:flex lg:flex-col lg:space-x-0 lg:space-y-4">
         <SidebarButton
           label="Lantai"

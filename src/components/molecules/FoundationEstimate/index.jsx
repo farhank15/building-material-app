@@ -1,12 +1,22 @@
+import React, { useState, useEffect } from "react";
 import { useBudget } from "@components/atoms/BudgetContext";
-import React, { useState } from "react";
-import CementIcon from "@assets/images/semenPondasi.svg"; // Pastikan jalur gambar sesuai dengan lokasi sebenarnya
+import CementIcon from "@assets/images/semenPondasi.svg";
+import Swal from "sweetalert2";
+import CostHistoryFoundation from "@components/atoms/CostHistoryFoundation";
 
 const FoundationCementEstimate = () => {
-  const { setSemenLantaiEstimate } = useBudget();
+  const { addPondasiEstimate } = useBudget(); // pastikan ini menggunakan addPondasiEstimate
   const [length, setLength] = useState("");
   const [width, setWidth] = useState("");
   const [cementWeight, setCementWeight] = useState(40); // kg per sack
+  const [history, setHistory] = useState(() => {
+    const saved = localStorage.getItem("foundationEstimateHistory");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("foundationEstimateHistory", JSON.stringify(history));
+  }, [history]);
 
   const floorArea = length * width; // in square meters
   const cementNeededPerSqM = 10; // kg per square meter
@@ -31,7 +41,48 @@ const FoundationCementEstimate = () => {
   };
 
   const handleAddEstimate = () => {
-    setSemenLantaiEstimate(estimatedCost);
+    if (!estimatedCost || isNaN(estimatedCost) || estimatedCost <= 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: "Mohon masukkan data dengan benar.",
+        toast: true,
+        position: "top-right",
+        timer: 3000,
+        showConfirmButton: false,
+      });
+      return;
+    }
+
+    const currentDateTime = new Date();
+    const timestamp = `${currentDateTime.toLocaleDateString()} ${currentDateTime.toLocaleTimeString()}`;
+
+    const newEstimate = {
+      length,
+      width,
+      cementWeight,
+      numberOfSacks,
+      cost: estimatedCost,
+      timestamp,
+    };
+
+    addPondasiEstimate(newEstimate); // pastikan ini menggunakan addPondasiEstimate
+    setHistory([...history, newEstimate]);
+
+    Swal.fire({
+      icon: "success",
+      title: "Berhasil",
+      text: "Estimasi biaya semen pondasi berhasil disimpan.",
+      toast: true,
+      position: "top-right",
+      timer: 3000,
+      showConfirmButton: false,
+    });
+
+    // Clear the input fields
+    setLength("");
+    setWidth("");
+    setCementWeight(40);
   };
 
   return (
@@ -93,10 +144,13 @@ const FoundationCementEstimate = () => {
               className="px-4 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-700"
               onClick={handleAddEstimate}
             >
-              Tambah
+              Simpan
             </button>
           </div>
         </div>
+      </div>
+      <div className="mt-6">
+        <CostHistoryFoundation history={history} setHistory={setHistory} />
       </div>
     </div>
   );

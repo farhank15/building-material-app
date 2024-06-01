@@ -8,15 +8,15 @@ import Kalkulasi from "@pages/kalkulasiPages";
 import SignIn from "@pages/signinPages";
 import Signup from "@pages/signupPages";
 import LoadingScreen from "@components/atoms/LoadingScreen";
+import ProtectedRoute from "@components/atoms/ProtectedRoute";
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
     const handleRouteChange = async () => {
       setIsLoading(true);
-      // Simulate a network request or any loading logic
       await new Promise((resolve) => setTimeout(resolve, 1500));
       setIsLoading(false);
     };
@@ -34,7 +34,14 @@ function App() {
       <Route path="/katalog" element={<Katalog />} />
       <Route path="/wilayah" element={<Wilayah />} />
       <Route path="/bantuan" element={<Bantuan />} />
-      <Route path="/kalkulasi" element={<Kalkulasi />} />
+      <Route
+        path="/kalkulasi"
+        element={
+          <ProtectedRoute>
+            <Kalkulasi />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<Signup />} />
     </Routes>

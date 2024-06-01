@@ -1,13 +1,22 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useBudget } from "@components/atoms/BudgetContext";
 import Kramik from "@assets/images/kramik.png";
+import Swal from "sweetalert2";
+import CostHistoryWall from "@components/atoms/CostHistoryWall";
 
-const WalolingEstimate = () => {
-  const { setLantaiEstimate } = useBudget();
+const WallingEstimate = () => {
   const [length, setLength] = useState("");
   const [width, setWidth] = useState("");
   const [price, setPrice] = useState("");
   const [tileSize, setTileSize] = useState("30x30");
+  const [history, setHistory] = useState(() => {
+    const saved = localStorage.getItem("dindingEstimateHistory");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("dindingEstimateHistory", JSON.stringify(history));
+  }, [history]);
 
   const getTilesPerSquareMeter = (size) => {
     if (size === "30x30") {
@@ -50,7 +59,53 @@ const WalolingEstimate = () => {
   };
 
   const handleAddEstimate = () => {
-    setLantaiEstimate(estimatedCost);
+    if (!estimatedCost || isNaN(estimatedCost) || estimatedCost <= 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: "Mohon masukkan data dengan benar.",
+        toast: true,
+        position: "top-right",
+        timer: 3000,
+        showConfirmButton: false,
+      });
+      return;
+    }
+
+    const currentDateTime = new Date();
+    const timestamp = `${currentDateTime.toLocaleDateString()} ${currentDateTime.toLocaleTimeString()}`;
+
+    const newEstimate = {
+      length,
+      width,
+      price,
+      tileSize,
+      numberOfPacks,
+      cost: estimatedCost,
+      timestamp,
+    };
+
+    setHistory([...history, newEstimate]);
+    localStorage.setItem(
+      "dindingEstimateHistory",
+      JSON.stringify([...history, newEstimate])
+    );
+
+    Swal.fire({
+      icon: "success",
+      title: "Berhasil",
+      text: "Estimasi biaya dinding berhasil disimpan.",
+      toast: true,
+      position: "top-right",
+      timer: 3000,
+      showConfirmButton: false,
+    });
+
+    // Clear the input fields
+    setLength("");
+    setWidth("");
+    setPrice("");
+    setTileSize("30x30");
   };
 
   return (
@@ -132,13 +187,16 @@ const WalolingEstimate = () => {
               className="px-4 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-700"
               onClick={handleAddEstimate}
             >
-              Tambah
+              Simpan
             </button>
           </div>
         </div>
+      </div>
+      <div className="mt-6">
+        <CostHistoryWall history={history} setHistory={setHistory} />
       </div>
     </div>
   );
 };
 
-export default WalolingEstimate;
+export default WallingEstimate;

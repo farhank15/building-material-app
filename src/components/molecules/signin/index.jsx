@@ -15,8 +15,8 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const usernameCookie = Cookies.get("username");
-    if (usernameCookie) {
+    const tokenCookie = Cookies.get("token");
+    if (tokenCookie) {
       navigate("/"); // Redirect to home page if already logged in
     }
   }, [navigate]);
@@ -57,11 +57,14 @@ const LoginForm = () => {
         return;
       }
 
+      // Generate a placeholder token
+      const token = btoa(`${username}:${password}`);
+
       // User found and password correct
       const cookieOptions = rememberMe
         ? { expires: 7 } // Persistent for 7 days
         : {}; // Session cookie
-      Cookies.set("username", user.username, cookieOptions); // Set a cookie
+      Cookies.set("token", token, cookieOptions); // Set a token cookie
       Swal.fire({
         icon: "success",
         title: "Login Berhasil",

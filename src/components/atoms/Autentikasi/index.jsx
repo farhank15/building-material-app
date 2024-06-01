@@ -8,16 +8,28 @@ const Autentikasi = ({ closeMenu, className = "" }) => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const usernameCookie = Cookies.get("username");
-    if (usernameCookie) {
-      setUsername(usernameCookie);
+  const checkToken = () => {
+    const token = Cookies.get("token");
+    if (token) {
+      const decodedToken = atob(token);
+      const [decodedUsername] = decodedToken.split(":");
+      setUsername(decodedUsername);
       setIsLoggedIn(true);
+    } else {
+      setUsername("");
+      setIsLoggedIn(false);
     }
+  };
+
+  useEffect(() => {
+    checkToken();
+    // Listen for changes to the token cookie
+    const cookieChangeInterval = setInterval(checkToken, 1000);
+    return () => clearInterval(cookieChangeInterval);
   }, []);
 
   const handleLogout = () => {
-    Cookies.remove("username");
+    Cookies.remove("token");
     setIsLoggedIn(false);
     closeMenu();
     navigate("/signin"); // Redirect to sign in page

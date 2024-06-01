@@ -1,7 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { NavLink, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import Autentikasi from "@components/atoms/Autentikasi";
 
@@ -17,25 +16,6 @@ const Navbar = () => {
     setIsOpen(false);
   };
 
-  const handleKalkulasiClick = (e) => {
-    const username = Cookies.get("username");
-    if (!username) {
-      e.preventDefault();
-      Swal.fire({
-        icon: "info",
-        title: "Login Diperlukan",
-        text: "Silakan login terlebih dahulu untuk mengakses halaman Kalkulasi.",
-        confirmButtonText: "OK",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/signin");
-        }
-      });
-    } else {
-      closeMenu();
-    }
-  };
-
   return (
     <nav className="fixed top-0 z-20 w-full bg-white shadow-lg font-poppins">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -43,7 +23,7 @@ const Navbar = () => {
           <div className="flex items-center flex-shrink-0">
             <h1 className="text-4xl font-bold">RML</h1>
           </div>
-          <div className="hidden md:flex md:items-center md:space-x-8 md:ml-10">
+          <div className="hidden lg:flex lg:items-center lg:space-x-8 lg:ml-10">
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -95,21 +75,21 @@ const Navbar = () => {
                   ? "btn btn-ghost btn-sm rounded-btn bg-blue-500 text-white font-bold"
                   : "btn btn-ghost btn-sm rounded-btn"
               }
-              onClick={handleKalkulasiClick}
+              onClick={closeMenu}
             >
               Kalkulasi
             </NavLink>
           </div>
           <div className="flex items-center space-x-4">
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <input
                 type="text"
                 placeholder="Search..."
                 className="input input-bordered input-sm"
               />
             </div>
-            <Autentikasi className="hidden md:block" closeMenu={closeMenu} />
-            <div className="flex items-center md:hidden">
+            <Autentikasi className="hidden lg:block" closeMenu={closeMenu} />
+            <div className="flex items-center lg:hidden">
               <button onClick={toggleMenu}>
                 {isOpen ? (
                   <FiX className="text-2xl" />
@@ -122,7 +102,7 @@ const Navbar = () => {
         </div>
       </div>
       {isOpen && (
-        <div className="bg-white shadow-lg md:hidden">
+        <div className="bg-white shadow-lg lg:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <NavLink
               to="/"
@@ -175,11 +155,10 @@ const Navbar = () => {
                   ? "block px-3 py-2 rounded-md text-base font-medium bg-blue-500 text-white"
                   : "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200"
               }
-              onClick={handleKalkulasiClick}
+              onClick={closeMenu}
             >
               Kalkulasi
             </NavLink>
-
             <div className="px-2 mt-3 space-y-1">
               <input
                 type="text"

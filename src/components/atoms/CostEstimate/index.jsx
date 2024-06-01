@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
 import { useBudget } from "../BudgetContext";
-import CostItem from "../CostItem";
-import TotalCost from "../TotalCost";
+import CatEstimateDetails from "../CatEstimateDetail";
+import FloorEstimateDetails from "../FloorEstimateDetail";
+import FloorCementEstimateDetails from "../FloorCementEstimateDetail";
+import FoundationCementEstimateDetails from "../FooundationCementDetail";
+import WallEstimateDetails from "../WallEstimateDetail";
 
 const CostEstimate = () => {
   const {
@@ -10,59 +13,65 @@ const CostEstimate = () => {
     semenLantaiEstimate,
     lantaiEstimate,
     pondasiEstimate,
-    dindingEstimate,
+    dindingestimate,
     catEstimate,
   } = useBudget();
+
   const estimates = {
-    dinding: dindingEstimate,
+    dinding: dindingestimate,
     pondasi: pondasiEstimate,
-    semenLantai: semenLantaiEstimate,
     lantai: lantaiEstimate,
-    cat: catEstimate.cost,
+    cat: catEstimate,
   };
 
-  const totalCost = Object.values(estimates).reduce(
-    (acc, curr) => acc + curr,
-    0
-  );
+  const totalCost =
+    Object.values(estimates).reduce((acc, curr) => {
+      const cost =
+        typeof curr === "object" && curr !== null
+          ? curr.cost
+          : parseInt(curr, 10) || 0;
+      return acc + cost;
+    }, 0) + (semenLantaiEstimate?.cost || 0);
 
   useEffect(() => {
     setTotalBudget(totalCost);
   }, [totalCost, setTotalBudget]);
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md">
-      <h2 className="mb-6 text-xl font-bold">Total Harga</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <tbody>
-            <CostItem label="Estimasi Dinding" value={estimates.dinding} />
-            <CostItem label="Estimasi Pondasi" value={estimates.pondasi} />
-            <CostItem
-              label="Estimasi Semen Lantai"
-              value={estimates.semenLantai}
-            />
-            <CostItem label="Estimasi Lantai" value={estimates.lantai} />
-            <CostItem label="Estimasi Cat" value={estimates.cat} />
-            <tr>
-              <td className="px-4 py-2 border">Warna Cat</td>
-              <td className="px-4 py-2 text-right border">
-                {catEstimate.color}
-              </td>
-            </tr>
-            <TotalCost total={totalCost} />
-          </tbody>
-        </table>
-      </div>
-      <p className="mt-4 text-red-500">*Harga belum termasuk pajak</p>
-      <div className="mt-6 text-xl font-bold">
-        Total Anggaran:
-        <span className="text-green-500">
-          {" "}
-          Rp {totalBudget.toLocaleString()},00
-        </span>
-      </div>
-    </div>
+    <>
+      <h2 className="text-xl font-semibold text-center text-gray-800">
+        Estimasi Biaya
+      </h2>
+      <table className="w-full max-w-3xl mx-auto mt-4 bg-white border border-collapse table-auto">
+        <thead>
+          <tr>
+            <th className="px-2 py-1 text-left border sm:px-4 sm:py-2">
+              Kategori
+            </th>
+            <th className="px-2 py-1 text-right border sm:px-4 sm:py-2">
+              Biaya
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <FloorEstimateDetails />
+          <FloorCementEstimateDetails />
+          <FoundationCementEstimateDetails />
+          <CatEstimateDetails />
+          <WallEstimateDetails />
+        </tbody>
+        <tfoot>
+          <tr>
+            <td className="px-2 py-1 font-semibold border sm:px-4 sm:py-2">
+              Total
+            </td>
+            <td className="px-2 py-1 font-semibold text-right border sm:px-4 sm:py-2">
+              Rp {Number(totalBudget).toLocaleString()}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </>
   );
 };
 

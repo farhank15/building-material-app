@@ -53,6 +53,15 @@
       "phone": "12213456757",
       "password": "12345678",
       "confirmPassword": "12345678"
+    },
+    {
+      "id": "5c08",
+      "username": "user123",
+      "name": "user",
+      "email": "user123@email.com",
+      "phone": "088888888888",
+      "password": "useruser",
+      "confirmPassword": "useruser"
     }
   ]
 }

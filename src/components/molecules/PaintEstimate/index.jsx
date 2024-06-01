@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useBudget } from "@components/atoms/BudgetContext";
-import PaintIcon from "@assets/images/cat.svg"; // Pastikan jalur gambar sesuai dengan lokasi sebenarnya
+import PaintIcon from "@assets/images/cat.svg";
+import Swal from "sweetalert2";
+import CostHistoryPaint from "@components/atoms/CostHistoryPaint";
 
 const PaintEstimate = () => {
-  const { setCatEstimate } = useBudget();
+  const { addCatEstimate, removeCatEstimate } = useBudget();
   const [height, setHeight] = useState("");
   const [width, setWidth] = useState("");
   const [doorHeight, setDoorHeight] = useState("");
@@ -12,8 +14,16 @@ const PaintEstimate = () => {
   const [windowHeight, setWindowHeight] = useState("");
   const [windowWidth, setWindowWidth] = useState("");
   const [windowCount, setWindowCount] = useState("");
-  const [paintPrice, setPaintPrice] = useState(""); // Rupiah per 2.5 liters
+  const [paintPrice, setPaintPrice] = useState("");
   const [color, setColor] = useState("Grey");
+  const [history, setHistory] = useState(() => {
+    const saved = localStorage.getItem("catEstimateHistory");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("catEstimateHistory", JSON.stringify(history));
+  }, [history]);
 
   const paintCoverage = 10; // m² per liter, fixed value as per example
 
@@ -30,48 +40,73 @@ const PaintEstimate = () => {
   const totalPackagesRequired = Math.ceil(litersRequired / paintPackageVolume);
   const estimatedCost = totalPackagesRequired * paintPrice;
 
-  const handleHeightChange = (e) => {
-    setHeight(e.target.value);
-  };
-
-  const handleWidthChange = (e) => {
-    setWidth(e.target.value);
-  };
-
-  const handleDoorHeightChange = (e) => {
-    setDoorHeight(e.target.value);
-  };
-
-  const handleDoorWidthChange = (e) => {
-    setDoorWidth(e.target.value);
-  };
-
-  const handleDoorCountChange = (e) => {
-    setDoorCount(e.target.value);
-  };
-
-  const handleWindowHeightChange = (e) => {
-    setWindowHeight(e.target.value);
-  };
-
-  const handleWindowWidthChange = (e) => {
-    setWindowWidth(e.target.value);
-  };
-
-  const handleWindowCountChange = (e) => {
-    setWindowCount(e.target.value);
-  };
-
-  const handlePaintPriceChange = (e) => {
-    setPaintPrice(e.target.value);
-  };
-
-  const handleColorChange = (e) => {
-    setColor(e.target.value);
-  };
+  const handleHeightChange = (e) => setHeight(e.target.value);
+  const handleWidthChange = (e) => setWidth(e.target.value);
+  const handleDoorHeightChange = (e) => setDoorHeight(e.target.value);
+  const handleDoorWidthChange = (e) => setDoorWidth(e.target.value);
+  const handleDoorCountChange = (e) => setDoorCount(e.target.value);
+  const handleWindowHeightChange = (e) => setWindowHeight(e.target.value);
+  const handleWindowWidthChange = (e) => setWindowWidth(e.target.value);
+  const handleWindowCountChange = (e) => setWindowCount(e.target.value);
+  const handlePaintPriceChange = (e) => setPaintPrice(e.target.value);
+  const handleColorChange = (e) => setColor(e.target.value);
 
   const handleAddEstimate = () => {
-    setCatEstimate({ cost: estimatedCost, color });
+    if (!estimatedCost || isNaN(estimatedCost) || estimatedCost <= 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: "Mohon masukkan data dengan benar.",
+        toast: true,
+        position: "top-right",
+        timer: 3000,
+        showConfirmButton: false,
+      });
+      return;
+    }
+
+    const currentDateTime = new Date();
+    const timestamp = `${currentDateTime.toLocaleDateString()} ${currentDateTime.toLocaleTimeString()}`;
+
+    const newEstimate = {
+      height,
+      width,
+      doorHeight,
+      doorWidth,
+      doorCount,
+      windowHeight,
+      windowWidth,
+      windowCount,
+      paintPrice,
+      cost: estimatedCost,
+      color,
+      litersRequired,
+      timestamp,
+    };
+    addCatEstimate(newEstimate);
+    setHistory([...history, newEstimate]);
+
+    Swal.fire({
+      icon: "success",
+      title: "Berhasil",
+      text: "Estimasi biaya cat berhasil disimpan.",
+      toast: true,
+      position: "top-right",
+      timer: 3000,
+      showConfirmButton: false,
+    });
+
+    // Clear the input fields
+    setHeight("");
+    setWidth("");
+    setDoorHeight("");
+    setDoorWidth("");
+    setDoorCount("");
+    setWindowHeight("");
+    setWindowWidth("");
+    setWindowCount("");
+    setPaintPrice("");
+    setColor("Grey");
   };
 
   const colorMap = {
@@ -210,11 +245,12 @@ const PaintEstimate = () => {
               className="px-4 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-700"
               onClick={handleAddEstimate}
             >
-              Tambah
+              Simpan
             </button>
           </div>
         </div>
       </div>
+      <CostHistoryPaint history={history} setHistory={setHistory} />
     </div>
   );
 };

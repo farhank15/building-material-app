@@ -8,8 +8,8 @@ const Hero = () => {
   const navigate = useNavigate();
 
   const handleStartProject = () => {
-    const username = Cookies.get("username");
-    if (username) {
+    const token = Cookies.get("token"); // Ensure this is the correct cookie name for your authentication token
+    if (token) {
       navigate("/kalkulasi");
     } else {
       Swal.fire({
